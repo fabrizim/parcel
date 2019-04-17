@@ -56,6 +56,11 @@ class HTMLPackager extends Packager {
 
   insertSiblingBundles(siblingBundles, tree) {
     const bundles = [];
+    
+    const relativePath = urlJoin(
+      this.options.publicURL, 
+      path.relative( this.options.outDir, bundle.name )
+    ).replace(/^\//,'');
 
     for (let bundle of siblingBundles) {
       if (bundle.type === 'css') {
@@ -63,14 +68,14 @@ class HTMLPackager extends Packager {
           tag: 'link',
           attrs: {
             rel: 'stylesheet',
-            href: urlJoin(this.options.publicURL, path.basename(bundle.name))
+            href: urlJoin(this.options.publicURL, relativePath)
           }
         });
       } else if (bundle.type === 'js') {
         bundles.push({
           tag: 'script',
           attrs: {
-            src: urlJoin(this.options.publicURL, path.basename(bundle.name))
+            src: urlJoin(this.options.publicURL, relativePath)
           }
         });
       }
